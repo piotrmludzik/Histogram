@@ -97,4 +97,67 @@ public class HistogramTest {
         assertThrows(IllegalArgumentException.class,
                 () -> histogram.generate("1955? You're my", null));
     }
+
+    @Test
+    @Order(8)
+    public void getHistogram_callBeforeGenerateHistogram_emptyMap() {
+        Histogram histogram = new Histogram();
+
+        assertEquals(new HashMap<>(), histogram.getHistogram());
+    }
+
+    @Test
+    @Order(9)
+    public void getHistogram_callAfterGenerateHistogram_RightMap() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Alright, McFly, you're asking for it, and now you're gonna get it.", histogram.generateRanges(2, 3));
+
+        Map<Range, Integer> expected = new HashMap<>(
+                Map.of(new Range(1, 2), 2,
+                        new Range(3, 4), 4,
+                        new Range(5, 6), 5
+                )
+        );
+
+        assertEquals(expected, histogram.getHistogram());
+    }
+
+    @Test
+    @Order(10)
+    public void getHistogram_callAfterMultipleCalling_RightMap() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Roads? Where we're going we don't need roads.", histogram.generateRanges(2, 3));
+
+        Map<Range, Integer> expected = new HashMap<>(
+                Map.of(new Range(1, 2), 1,
+                        new Range(3, 4), 3,
+                        new Range(5, 6), 4
+                )
+        );
+
+        histogram.getHistogram();
+        histogram.getHistogram();
+        assertEquals(expected, histogram.getHistogram());
+    }
+
+    @Test
+    @Order(11)
+    public void getHistogram_stringRepresentationBeforeGenerate_EmptyString() {
+        Histogram histogram = new Histogram();
+
+        assertEquals("", histogram.toString());
+    }
+
+    @Test
+    @Order(12)
+    public void getHistogram_stringRepresentationAfterGenerate_RightString() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Alright, McFly, you're asking for it, and now you're gonna get it.", histogram.generateRanges(2, 3));
+
+        String expected = "5  - 6 | *****\n" +
+                "3  - 4 | ****\n" +
+                "1  - 2 | **\n";
+
+        assertEquals(expected, histogram.toString());
+    }
 }
