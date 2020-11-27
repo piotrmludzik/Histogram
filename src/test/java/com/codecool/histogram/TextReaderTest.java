@@ -31,45 +31,33 @@ public class TextReaderTest {
     @Order(2)
     public void read_fileWithOneLine_oneLineString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/test.txt");
-        assertEquals("Harry Potter and the Sorcerer's Stone", reader.read());
+        assertEquals("Now, Biff, um, can I assume that your insurance is gonna pay for the damage?", reader.read());
     }
 
     @Test
     @Order(3)
     public void read_fileWithMultipleLine_multipleLineString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/text.txt");
-        assertEquals("SORTING HAT SONG\n" +
-                "\n" +
-                "One thousand years ago this story starts\n" +
-                "There were four sorcerers with strong and kind hearts\n" +
-                "Bold Gryffindor from wild moor\n" +
-                "Fair Ravenclaw from glen\n" +
-                "Sweet Hufflepuff from valley broad\n" +
-                "Shrewd Slytherin from fen\n" +
-                "They had a dream to teach all that they knew\n" +
-                "Witches and wizards came far and it grew\n" +
-                "'Til a castle stood tall by the shores of a lake\n" +
-                "And a thousand years later the magic remains\n" +
-                "Old Hogwarts Sorting Hat sing me a song\n" +
-                "Speak in my head tell me where I belong\n" +
-                "And when things look bad and there's no where to run\n" +
-                "Unite all the houses and we'll fight as one\n" +
-                "Brave Godric Gryffindor favoured the strong\n" +
-                "Those who had courage and knew right from wrong\n" +
-                "And Rowena Ravenclaw taught only the best\n" +
-                "So kind Helga Hufflepuff would teach all the rest\n" +
-                "But Salazar Slytherin had is own plans\n" +
-                "He thought the Muggle-borns didn't understand\n" +
-                "The subtleties of magic and so he devised\n" +
-                "The Chamber of Secrets with a monster inside\n" +
-                "Old Hogwarts Sorting Hat sing me a song\n" +
-                "Speak in my head tell me where I belong\n" +
-                "And when things look bad and there's no where to run\n" +
-                "Unite all the houses and we'll fight as one\n" +
-                "Old Hogwarts Sorting Hat sing me a song\n" +
-                "Speak in my head tell me where I belong\n" +
-                "And when things look bad and there's no where to run\n" +
-                "Unite all the houses and we'll fight as one\n" +
-                "Unite all the houses and we'll fight as one.", reader.read());
+        assertEquals("Uh Doc, uh no. No, don't be silly.\n" +
+                "Yeah, well, how about my homework, McFly?\n" +
+                "Of course, the Enchantment Under The Sea Dance they're supposed to go to this, that's where they kiss for the first time.\n" +
+                "Of course, the Enchantment Under The Sea Dance they're supposed to go to this, that's where they kiss for the first time.\n" +
+                "Okay.\n" +
+                "This is more serious than I thought. Apparently your mother is amorously infatuated with you instead of your father.\n" +
+                "Okay, alright, I'll prove it to you. Look at my driver's license, expires 1987. Look at my birthday, for crying out load I haven't even been born yet. And, look at this picture, my brother, my sister, and me. Look at the sweatshirt, Doc, class of 1984.\n" +
+                "Oh, pleased to meet you, Calvin Marty Klein. Do you mind if I sit here?\n" +
+                "Here you go, lady. There's a quarter.\n" +
+                "You're gonna be in the car with her.\n" +
+                "What, what, ma?\n" +
+                "Hi, it's really a pleasure to meet you.\n" +
+                "Ah.\n" +
+                "Crazy drunk drivers.\n" +
+                "You got a real attitude problem, McFly. You're a slacker. You remind me of you father when he went her, he was a slacker too.\n" +
+                "Well, safe and sound, now, n good old 1955.\n" +
+                "Yeah, it's 8:00.\n" +
+                "I noticed you band is on the roster for dance auditions after school today. Why even bother Mcfly, you haven't got a chance, you're too much like your own man. No McFly ever amounted to anything in the history of Hill Valley.\n" +
+                "Roads? Where we're going we don't need roads.\n" +
+                "On the night I go back in time, you get- Doc.",
+                reader.read());
     }
 }
