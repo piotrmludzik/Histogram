@@ -15,28 +15,28 @@ public class TextReaderTest {
 
     @Test
     @Order(0)
-    public void read_FileNotExist_FileNotFoundExceptio() {
+    public void read_fileNotExist_fileNotFoundExceptio() {
         TextReader reader = new TextReader("src/test/resources/ghost.txt");
        assertThrows(FileNotFoundException.class, reader::read);
     }
 
     @Test
     @Order(1)
-    public void read_EmptyFile_EmptyString() throws IOException {
+    public void read_emptyFile_emptyString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/empty.txt");
         assertEquals("", reader.read());
     }
 
     @Test
     @Order(2)
-    public void read_FileWithOneLine_OneLineString() throws IOException {
+    public void read_fileWithOneLine_oneLineString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/test.txt");
         assertEquals("Harry Potter and the Sorcerer's Stone", reader.read());
     }
 
     @Test
     @Order(3)
-    public void read_FileWithMultipleLine_MultipleLineString() throws IOException {
+    public void read_fileWithMultipleLine_multipleLineString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/text.txt");
         assertEquals("SORTING HAT SONG\n" +
                 "\n" +
