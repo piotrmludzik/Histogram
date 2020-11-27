@@ -31,7 +31,7 @@ public class TextReaderTest {
     @Order(2)
     public void read_fileWithOneLine_oneLineString() throws IOException {
         TextReader reader = new TextReader("src/test/resources/test.txt");
-        assertEquals("Now, Biff, um, can I assume that your insurance is gonna pay for the damage?", reader.read());
+        assertEquals("Now, Biff, um, can I assume that your insurance is gonna pay for the damage?\n", reader.read());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TextReaderTest {
                 "Yeah, it's 8:00.\n" +
                 "I noticed you band is on the roster for dance auditions after school today. Why even bother Mcfly, you haven't got a chance, you're too much like your own man. No McFly ever amounted to anything in the history of Hill Valley.\n" +
                 "Roads? Where we're going we don't need roads.\n" +
-                "On the night I go back in time, you get- Doc.",
+                "On the night I go back in time, you get- Doc.\n",
                 reader.read());
     }
 }
