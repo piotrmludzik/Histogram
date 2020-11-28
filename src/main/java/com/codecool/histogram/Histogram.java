@@ -110,7 +110,7 @@ public class Histogram {
         return resultBuilder.toString();
     }
 
-    private int getMaxValue() {
+    public int getMaxValue() {
         return histogram
                 .entrySet()
                 .stream()
@@ -119,7 +119,7 @@ public class Histogram {
                 .getValue();
     }
 
-    private int getMinValue() {
+    public int getMinValue() {
         return histogram
                 .entrySet()
                 .stream()

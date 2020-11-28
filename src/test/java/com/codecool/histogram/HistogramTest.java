@@ -160,4 +160,35 @@ public class HistogramTest {
 
         assertEquals(expected, histogram.toString());
     }
+
+    @Test
+    @Order(13)
+    public void getMinValue_callGetMinValue_returnMinValueOfRanges() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Roads? Where we're going we don't need roads.", histogram.generateRanges(2, 3));
+
+        assertEquals(1, histogram.getMinValue());
+    }
+    @Test
+    @Order(14)
+    public void getMaxValue_callGetMaxValue_returnMaxValueOfRanges() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Roads? Where we're going we don't need roads.", histogram.generateRanges(2, 3));
+
+        assertEquals(4, histogram.getMaxValue());
+    }
+
+    @Test
+    @Order(15)
+    public void normalizeValues_() {
+        Histogram histogram = new Histogram();
+        histogram.generate("Roads? Where we're going we don't need roads.", histogram.generateRanges(2, 3));
+        histogram.normalizeValues();
+
+        String expected = "5  - 6 | ****************************************************************************************************\n" +
+                "3  - 4 | ******************************************************************\n" +
+                "1  - 2 | \n";
+
+        assertEquals(expected, histogram.toString());
+    }
 }
