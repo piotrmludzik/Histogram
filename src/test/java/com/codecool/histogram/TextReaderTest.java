@@ -13,34 +13,37 @@ import java.io.IOException;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TextReaderTest {
 
+    String RES_PATH = "src/test/resources/";
+
     @Test
     @Order(0)
-    public void read_fileNotExist_fileNotFoundExceptio() {
-        TextReader reader = new TextReader("src/test/resources/ghost.txt");
-       assertThrows(FileNotFoundException.class, reader::read);
+    public void read_fileNotExist_fileNotFoundException() {
+        TextReader reader = new TextReader(RES_PATH + "ghost.txt");
+        assertThrows(FileNotFoundException.class, reader::read);
     }
 
     @Test
     @Order(1)
     public void read_emptyFile_emptyString() throws IOException {
-        TextReader reader = new TextReader("src/test/resources/empty.txt");
-        assertEquals("", reader.read());
+        TextReader reader = new TextReader(RES_PATH + "empty.txt");
+        String expected = "";
+        assertEquals(expected, reader.read());
     }
 
     @Test
     @Order(2)
     public void read_fileWithOneLine_oneLineString() throws IOException {
-        TextReader reader = new TextReader("src/test/resources/test.txt");
-        assertEquals("Now, Biff, um, can I assume that your insurance is gonna pay for the damage?\n", reader.read());
+        TextReader reader = new TextReader(RES_PATH + "test.txt");
+        String expected = "Now, Biff, um, can I assume that your insurance is gonna pay for the damage?\n";
+        assertEquals(expected, reader.read());
     }
 
     @Test
     @Order(3)
     public void read_fileWithMultipleLine_multipleLineString() throws IOException {
-        TextReader reader = new TextReader("src/test/resources/text.txt");
-        assertEquals("Uh Doc, uh no. No, don't be silly.\n" +
+        TextReader reader = new TextReader(RES_PATH + "text.txt");
+        String expected = "Uh Doc, uh no. No, don't be silly.\n" +
                 "Yeah, well, how about my homework, McFly?\n" +
-                "Of course, the Enchantment Under The Sea Dance they're supposed to go to this, that's where they kiss for the first time.\n" +
                 "Of course, the Enchantment Under The Sea Dance they're supposed to go to this, that's where they kiss for the first time.\n" +
                 "Okay.\n" +
                 "This is more serious than I thought. Apparently your mother is amorously infatuated with you instead of your father.\n" +
@@ -57,7 +60,7 @@ public class TextReaderTest {
                 "Yeah, it's 8:00.\n" +
                 "I noticed you band is on the roster for dance auditions after school today. Why even bother Mcfly, you haven't got a chance, you're too much like your own man. No McFly ever amounted to anything in the history of Hill Valley.\n" +
                 "Roads? Where we're going we don't need roads.\n" +
-                "On the night I go back in time, you get- Doc.\n",
-                reader.read());
+                "On the night I go back in time, you get- Doc.\n";
+        assertEquals(expected, reader.read());
     }
 }
