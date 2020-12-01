@@ -1,6 +1,10 @@
 package com.codecool.histogram;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
@@ -9,42 +13,27 @@ public class HistogramTest {
 
     private final Histogram sampleHistogram = new Histogram();
     private final String sampleWords = "Roads? Where we're going we don't need roads.";
-    private final List<Range> sampleRanges = sampleHistogram.generateRanges(2, 3);
-    private final Map<Range, Integer> actualSampleHistogramMap = sampleHistogram.generate(sampleWords, sampleRanges);
-
-    private final Map<Range, Integer> expectedSampleHistogramMap = new HashMap<>(
-            Map.of(new Range(1, 2), 1,
-                    new Range(3, 4), 3,
-                    new Range(5, 6), 4
-            )
-    );
 
     @Nested
     public class GenerateRanges {
         @Test
         public void positiveIntegersIsGiven_normalRanges() {
-            List<Range> expectedSampleRanges = new ArrayList<>(
+            List<Range> result = sampleHistogram.generateRanges(2, 3);
+
+            List<Range> expected = new ArrayList<>(
                     List.of(new Range(1, 2),
                             new Range(3, 4),
                             new Range(5, 6)
                     )
             );
 
-            assertIterableEquals(expectedSampleRanges, sampleRanges);
+            assertIterableEquals(expected, result);
         }
 
-        @Test
-        public void negativeIntegerAsStepParameter_illegalArgumentExceptionMessage() {
-            IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
-                    () -> sampleHistogram.generateRanges(-2, 3));
-            assertEquals("Step must be positive.", thrown.getMessage());
-        }
-
-        @Test
-        public void negativeIntegerAsAmountParameter_illegalArgumentExceptionMessage() {
-            IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
-                    () -> sampleHistogram.generateRanges(2, -3));
-            assertEquals("Amount must be positive.", thrown.getMessage());
+        @ParameterizedTest(name = "generateRanges({0}, {1})")
+        @CsvSource({"-2, 3", "2, -3"})
+        public void negativeIntegerAsParameters_illegalArgumentExceptionMessage(int x, int y) {
+            assertThrows(IllegalArgumentException.class, () -> sampleHistogram.generateRanges(x, y));
         }
     }
 
@@ -52,23 +41,43 @@ public class HistogramTest {
     public class Generate {
         @Test
         public void wordsInRange_allWordsInOneOfRanges() {
-            assertEquals(expectedSampleHistogramMap, actualSampleHistogramMap);
+            List<Range> ranges = sampleHistogram.generateRanges(2, 3);
+            Map<Range, Integer> result = sampleHistogram.generate(sampleWords, ranges);
+
+            Map<Range, Integer> expected = new HashMap<>(
+                    Map.of(new Range(1, 2), 1,
+                            new Range(3, 4), 3,
+                            new Range(5, 6), 4
+                    )
+            );
+
+            assertEquals(expected, result);
         }
 
         @Test
         public void wordsOutOfRange_emptyMap() {
-            assertEquals(new HashMap<>(), sampleHistogram.generate(sampleWords, sampleHistogram.generateRanges(1, 1)));
+            List<Range> ranges = sampleHistogram.generateRanges(1, 1);
+            Map<Range, Integer> result = sampleHistogram.generate(sampleWords, ranges);
+
+            HashMap<Range, Integer> expected = new HashMap<>();
+
+            assertEquals(expected, result);
         }
 
         @Test
         public void emptyText_emptyMap() {
-            assertEquals(new HashMap<>(), sampleHistogram.generate("", sampleRanges));
+            List<Range> ranges = sampleHistogram.generateRanges(2, 3);
+            Map<Range, Integer> result = sampleHistogram.generate("", ranges);
+
+            HashMap<Range, Integer> expected = new HashMap<>();
+
+            assertEquals(expected, result);
         }
 
         @Test
         public void nullText_throwIllegalArgumentException() {
             assertThrows(IllegalArgumentException.class,
-                    () -> sampleHistogram.generate(null, sampleRanges));
+                    () -> sampleHistogram.generate(null, sampleHistogram.generateRanges(2, 3)));
         }
 
         @Test
@@ -80,6 +89,8 @@ public class HistogramTest {
 
     @Nested
     public class GetHistogram {
+        List<Range> sampleRanges = sampleHistogram.generateRanges(2, 3);
+
         @Test
         public void callBeforeGenerateHistogram_emptyMap() {
             Histogram histogram = new Histogram();
@@ -89,26 +100,46 @@ public class HistogramTest {
 
         @Test
         public void callAfterGenerateHistogram_RightMap() {
-            assertEquals(expectedSampleHistogramMap, sampleHistogram.getHistogram());
+            sampleHistogram.generate(sampleWords, sampleRanges);
+
+            Map<Range, Integer> expected = new HashMap<>(
+                    Map.of(new Range(1, 2), 1,
+                            new Range(3, 4), 3,
+                            new Range(5, 6), 4
+                    )
+            );
+
+            assertEquals(expected, sampleHistogram.getHistogram());
         }
 
         @Test
         public void callAfterMultipleCalling_RightMap() {
+            sampleHistogram.generate(sampleWords, sampleRanges);
             sampleHistogram.getHistogram();
             sampleHistogram.getHistogram();
 
-            assertEquals(expectedSampleHistogramMap, sampleHistogram.getHistogram());
+            Map<Range, Integer> expected = new HashMap<>(
+                    Map.of(new Range(1, 2), 1,
+                            new Range(3, 4), 3,
+                            new Range(5, 6), 4
+                    )
+            );
+
+            assertEquals(expected, sampleHistogram.getHistogram());
         }
 
         @Test
         public void stringRepresentationBeforeGenerate_EmptyString() {
             Histogram histogram = new Histogram();
+            String result = histogram.toString();
 
-            assertEquals("", histogram.toString());
+            assertEquals("", result);
         }
 
         @Test
         public void getHistogram_stringRepresentationAfterGenerate_RightString() {
+            sampleHistogram.generate(sampleWords, sampleRanges);
+
             String expectedSampleString = "5  - 6 | ****\n" +
                     "3  - 4 | ***\n" +
                     "1  - 2 | *\n";
@@ -117,23 +148,38 @@ public class HistogramTest {
         }
     }
 
-    @Test
-    public void getMinValue_callGetMinValue_returnMinValueOfRanges() {
-        assertEquals(1, sampleHistogram.getMinValue());
-    }
-    @Test
-    public void getMaxValue_callGetMaxValue_returnMaxValueOfRanges() {
-        assertEquals(4, sampleHistogram.getMaxValue());
-    }
+    @Nested
+    public class normalizeValues {
+        private final List<Range> sampleRanges = sampleHistogram.generateRanges(2, 3);
 
-    @Test
-    public void normalizeValues_() {
-        sampleHistogram.normalizeValues();
+        @ParameterizedTest(name = "{0}")
+        @ValueSource(strings = {"getMinValue", "getMaxValue"})
+        public void getValue_returnValue(String value) {
+            sampleHistogram.generate(sampleWords, sampleRanges);
 
-        String expected = "5  - 6 | ****************************************************************************************************\n" +
-                "3  - 4 | ******************************************************************\n" +
-                "1  - 2 | \n";
+            switch (value) {
+                case "getMinValue":
+                    assertEquals(1, sampleHistogram.getMinValue());
+                case "getMaxValue" :
+                    assertEquals(4, sampleHistogram.getMaxValue());
+            }
+        }
 
-        assertEquals(expected, sampleHistogram.toString());
+        @Test
+        public void callNormalizeValues_StringRangesFrom0To100() {
+            // Arrange:
+            sampleHistogram.generate(sampleWords, sampleRanges);
+
+            // Act:
+            sampleHistogram.normalizeValues();
+            String result = sampleHistogram.toString();
+
+            // Assert:
+            String expected = "5  - 6 | " + "*".repeat(100) + "\n" +
+                    "3  - 4 | " + "*".repeat(66) + "\n" +
+                    "1  - 2 | \n";
+
+            assertEquals(expected, result);
+        }
     }
 }
